@@ -183,4 +183,4 @@ class Chatango(lib.CherryBlossom):
 
 if __name__ == "__main__":
     CHATANGO = Chatango("username", "password")
-    CHATANGO.start_client("room1", "room2)
+    CHATANGO.start_client("room1", "room2", "etc")
