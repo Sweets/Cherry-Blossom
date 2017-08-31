@@ -6,7 +6,6 @@ from .chatango.utilities import get_user_auth, room_name_is_valid
 from . import profile
 from .room import Room
 from .privatemessages import PrivateMessages
-from .messagecatcher import MessageCatcher
 
 class Bot(object):
     def __init__(self, user_name, password):
@@ -29,7 +28,6 @@ class CherryBlossom(object):
 
         self.rooms = list()
         self.private_messages = None
-        self.message_catcher = None
 
         self.prefix = None
         self.active = False
