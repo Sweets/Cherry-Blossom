@@ -176,7 +176,7 @@ class Chatango(lib.CherryBlossom):
         """
 
         if command == "test":
-            print("test")
+            await room.send_message("Test succeeded.")
 
     async def unmanaged_command(self, receiver, command, frame):
         print(receiver, command, frame)
