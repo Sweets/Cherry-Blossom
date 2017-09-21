@@ -70,7 +70,7 @@ class Chatango(lib.CherryBlossom):
         PrivateMessage.flags   | List[str] | Flags the message has
         PrivateMessage.content | str       | Message content
         """
-        pass
+        await client.send_message("You", "can", "specify", "multiple arguments", recipient="Coil") # Redirects PMs to me. PLEASE change this.
 
     #
     # Rooms
