@@ -47,7 +47,7 @@ class PrivateMessages(Transport):
         await self.send_frame("msgbg", 0)
 
     async def send_message(self, *args, recipient=None):
-        if isinstance(recipient, str): # verify username
+        if isinstance(recipient, str): # TO-DO: verify username
             await self.send_frame("msg", recipient.lower(),
                                   "<n" + self.user.styles.name_color + "/><m v=\"1\"><g x" +
                                   self.user.styles.font_size + "s" +
