@@ -190,3 +190,33 @@ class RoomUser(object):
 
     def __eq__(self, alternative):
         return self.name == alternative.name
+
+class Friend(object):
+    def __init__(self, client, user_name, _time, status, idle_time):
+        self.client = client
+        self.name = user_name # names are already lowered in PMs
+        self.status = status
+        self.__sender_profile = None # TODO
+        
+        if status == "on" and int(idle_time) >= 1:
+            self.idle = True
+            self.last_active = time.time() - (int(idle_time) * 60)
+        else:
+            self.idle = False
+            self.last_active = float(_time)
+
+    async def is_online(self):
+        return self.status == "online"
+
+    async def is_offline(self):
+        return self.status in ["offline", "app"]
+    
+    async def is_on_mobile(self):
+        return self.status == "app"
+   
+    async def send_message(self, *message):
+        await self.client.send_message(*message, recipient=self.name)
+
+    def __str__(self):
+        return self.name
+    
