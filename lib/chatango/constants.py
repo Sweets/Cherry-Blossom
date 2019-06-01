@@ -4,6 +4,15 @@ ORIGIN = "http://st.chatango.com"
 W12, SV2, SV4, SV6, SV8, SV10, SV12 = 75, 95, 110, 104, 101, 110, 116
 
 FIXED_WEIGHTS = {
+    "de-livechat":       5, "ronaldo7-net":      51, "peliculas-flv":    69,
+    "watch-dragonball":  8, "kiiiikiii":         21, "narutochatt":      70,
+    "narutowire":       10, "pokemonepisodeorg": 22, "darksouls2wiki":   54,
+    "soccerjumbo":      21, "rgsmotrisport":     51, "myfoxdfw":         67,
+    "leeplarp":         27, "ver-anime":          8, "dbzepisodeorg":    10,
+    "animelinkz":       20, "mitvcanal":         56, "watchanimeonn":    22,
+    "cricket365live":   21, "eafangames":        56, "cricvid-hitcric-": 51,
+    "sport24lt":        56, "animeultimacom":    34, "stream2watch3":    56,
+    "vipstand":         21, "ttvsports":         56
     } # TO-DO: this. Also need a different variable name lol
 
 SERVER_MAP = [
@@ -32,3 +41,6 @@ FONT_FACES = {
         "Handwriting": "3", "Impact": "5", "Palatino":   "5",
         "Papyrus":     "6", "Times":  "7", "Typewriter": "8"
         }
+
+GROUP_VERSION = 15
+MAX_MESSAGE_SIZE = 2900
