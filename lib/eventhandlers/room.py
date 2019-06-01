@@ -13,10 +13,11 @@ from ..user import RoomModerator as Moderator
 
 async def v(room, chatango, library):
     chatango = int(chatango)
+    library = int(library)
     
     if chatango > GROUP_VERSION:
         print("Chatango group version higher than library supported")
-    elif chatango < GROUP_VERSION:
+    elif GROUP_VERSION > library:
         print("Chatango group version lower than library supported")
 
 async def ok(room, owner, user_id, state, user_name, _time, ip_address, mods, _flags):
