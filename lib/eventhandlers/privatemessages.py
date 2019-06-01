@@ -2,6 +2,7 @@
 import time
 
 from ..message import PrivateMessage as Message
+from ..user import Friend
 
 async def seller_name(client, user_name, session_id):
     pass
