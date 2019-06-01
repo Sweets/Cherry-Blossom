@@ -4,10 +4,20 @@ import time
 import asyncio
 
 from ..chatango import flags
+from ..chatango.constants import GROUP_VERSION
+from ..chatango.utilities import get_anonymous_user_id
 from ..message import RoomMessage as Message
 from ..block import RoomBlock as Block
 from ..user import RoomUser as User
 from ..user import RoomModerator as Moderator
+
+async def v(room, chatango, library):
+    chatango = int(chatango)
+    
+    if chatango > GROUP_VERSION:
+        print("Chatango group version higher than library supported")
+    elif chatango < GROUP_VERSION:
+        print("Chatango group version lower than library supported")
 
 async def ok(room, owner, user_id, state, user_name, _time, ip_address, mods, _flags):
     room.owner = owner
@@ -215,45 +225,66 @@ async def ubw(room):
     await room.emit_event("room_banned_words_updated")
 
 async def participant(room, action, session_id, user_id, user_name, temp_name, ip_address, _time):
-
-    print(action, session_id, user_id, user_name, temp_name, ip_address, _time)
-
     action = int(action)
 
-    has_multiple_sessions = False
-    participant_list = list()
-
-    for _participant in room.participants:
-        participant_list.append(_participant.name)
-
-    if user_name in participant_list:
-        has_multiple_sessions = True
-
-    # to-do: rewrite this logic
-
-    # room, session_id, _time, user_id, user_name, temp_name, ip_address
     if action == 0:
+        # user left
         participant = await room.get_participant(user_name)
-        if not isinstance(participant, type(None)):
+        if participant:
             room.participants.remove(participant)
-            if not has_multiple_sessions:
-                await room.emit_event("room_user_left", participant)
+
+            for _participant in room.participants:
+                if participant == _participant:
+                    return # They've got another session with the same user
+            # No other sessions
+            await room.emit_event("room_user_left", participant)
 
     elif action == 1:
-        if user_name != "None":
-            participant = User(room,
-                               session_id,
-                               _time,
-                               user_id,
-                               user_name,
-                               temp_name,
-                               ip_address)
-            room.participants.append(participant)
-            if not has_multiple_sessions:
-                await room.emit_event("room_user_joined", participant)
+        # user joined
+        participant = User(room,
+                           session_id,
+                           _time,
+                           user_id,
+                           user_name,
+                           temp_name,
+                           ip_address)
+
+        should_emit_event = True
+        for _participant in room.participants:
+            if participant == _participant:
+                should_emit_event = False
+
+        room.participants.append(participant)
+        if should_emit_event:
+            await room.emit_event("room_user_joined", participant)
 
     elif action == 2:
-        pass # Still working out some things for when a user changes names
+        # name change performed, identify users by session id
+        for participant in room.participants:
+            if participant.session_id == session_id:
+                # Found participant
+                users_new_name = str()
+
+                if user_name == "None":
+                    if temp_name == "None":
+                        users_new_name = "anon" + get_anonymous_user_id(
+                            _time.split(".")[0][-4:], user_id)
+                    else:
+                        users_new_name = temp_name.lower()
+                    logged_in = False
+                else:
+                    users_new_name = user_name.lower()
+                    logged_in = True
+
+                users_old_name = participant.name
+
+                participant.name = users_new_name
+                participant.logged_in = logged_in
+
+                await room.emit_event("room_user_changed_name",
+                                      participant,
+                                      users_old_name,
+                                      users_new_name)
 
 async def clearall(room, _ok):
     if _ok == 'ok': # ???
