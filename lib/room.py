@@ -3,6 +3,7 @@ import asyncio
 
 from .eventhandlers import room as eventhandler
 from .chatango import flags
+from .chatango.constants import FONT_FACES, MAX_MESSAGE_SIZE
 from .chatango.utilities import get_room_server, user_name_is_valid
 from .transport import Transport
 
@@ -152,9 +153,21 @@ class Room(Transport):
                     packed_flags = flags.pack_flag(packed_flags, flag)
             if self.user.name:
                 name_color = "<n" + self.user.styles.name_color + "/>"
+                
+            font_size = self.user.styles.font_size if font_size > 10 else "09"
+            
+            font_face = self.user.styles.font_family
+            font_face = FONT_FACES.get(font_face, font_face)
+            
             message = name_color + "<f x{}{}=\"{}\">".format(
-                self.user.styles.font_size,
-                self.user.styles.font_color,
-                self.user.styles.font_face
-                ) + "\r".join(message) + "</f>"
-            await self.send_frame("bm", "love", packed_flags, message)
+                str(font_size), self.user.styles.font_color,
+                font_face) + "\r".join(message) + "</f>"
+            
+            # Spam-related checks should be performed here
+            # MAX_MESSAGE_SIZE assumes the bot has permissions
+            # to bypass NLP checks or NLP checks are disabled
+            
+            if getsizeof(message) < MAX_MESSAGE_SIZE:
+                # strictly speaking, this bm frame is invalid,
+                # but "love" is a way to identify a bot using cherry blossom ;)
+                await self.send_frame("bm", "love", packed_flags, message)
