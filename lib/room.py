@@ -1,6 +1,8 @@
 
 import asyncio
 
+from sys import getsizeof
+
 from .eventhandlers import room as eventhandler
 from .chatango import flags
 from .chatango.constants import FONT_FACES, MAX_MESSAGE_SIZE
