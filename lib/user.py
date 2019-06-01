@@ -92,10 +92,10 @@ class RoomUser(object):
         self.room = room
         if user_name == "None":
             if temp_name == "None":
-                self.name = "anon" + get_anonymous_user_id(
+                self.name = ":anon" + get_anonymous_user_id(
                         join_time.split(".")[0][-4:], user_id)
             else:
-                self.name = temp_name.lower()
+                self.name = ";" + temp_name.lower()
             self.logged_in = False
         else:
             self.name = user_name
@@ -158,7 +158,7 @@ class RoomUser(object):
         assert await self.room.current_user_is_moderator(), "Current user is not a moderator"
         last_message = await self.get_last_message()
         if last_message:
-            if self.name[0] in ["", ";"]:
+            if self.name[0] in [":", ";"]:
                 name = ""
             else:
                 name = self.name.lower()
@@ -181,11 +181,6 @@ class RoomUser(object):
                 record.remove()
 
     def __str__(self):
-        name = ""
-        if self.logged_in:
-            name = self.name
-        else:
-            name = ";" + self.name
         return name
 
     def __eq__(self, alternative):
