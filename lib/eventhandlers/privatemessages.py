@@ -69,12 +69,11 @@ async def status(client, user_name, _time, status, unknown):
     if friend:
         friend.last_active = float(_time)
         friend.idle = False
+        friend.status = status
         
         if status == "online":
-            friend.status = "on"
             await client.emit_event("private_messages_friend_online", friend)
         else:
-            friend.status = "off" if status == "offline" else status
             await client.emit_event("private_messages_friend_offline", friend)
 
 async def track(client, user_name, _time, status):
