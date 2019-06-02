@@ -268,10 +268,10 @@ async def participant(room, action, session_id, user_id, user_name, temp_name, i
 
                 if user_name == "None":
                     if temp_name == "None":
-                        users_new_name = "anon" + get_anonymous_user_id(
+                        users_new_name = ":anon" + get_anonymous_user_id(
                             _time.split(".")[0][-4:], user_id)
                     else:
-                        users_new_name = temp_name.lower()
+                        users_new_name = ";" + temp_name.lower()
                     logged_in = False
                 else:
                     users_new_name = user_name.lower()
