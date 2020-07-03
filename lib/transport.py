@@ -29,16 +29,12 @@ class Transport(object):
         await self.websocket.stop()
 
     async def send_frame(self, *args, terminator="\r\n"):
-        frame = []
-        for arg in args:
-            frame.append(str(arg))
+        frame = [str(arg) for arg in args]
         await self.websocket.send(":".join(frame) + terminator)
 
     async def start_heartbeat(self):
         while self.websocket.connected:
-            for x in range(20):
-                if self.websocket.connected:
-                    await asyncio.sleep(1)
+            await asyncio.sleep(20)
             if self.websocket.connected:
                 await self.send_frame("\r\n", terminator="\x00")
 
